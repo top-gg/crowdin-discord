@@ -1,7 +1,7 @@
 name = "workername"
 type = "webpack"
 webpack_config = "webpack.config.js"
-account_id = "f2ced4fc0f5c1d9838ecc08a0d15bdb4"
+account_id = "your account id"
 workers_dev = true
 route = ""
 zone_id = ""
