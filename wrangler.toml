@@ -1,8 +1,7 @@
-ds_webhook = "your URL here"
-name = "WORKER NAME"
-type = "javascript"
-
-account_id = "YOUR account_id"
+name = "crowdin-discord"
+type = "webpack"
+webpack_config = "webpack.config.js"
+account_id = "f2ced4fc0f5c1d9838ecc08a0d15bdb4"
 workers_dev = true
 route = ""
 zone_id = ""
