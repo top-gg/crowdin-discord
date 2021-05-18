@@ -16,7 +16,7 @@ const mappers: Record<CrowdinEvents, (num: number) => string> = {
     return `Updated ${change} source strings.`
   },
   'string.deleted'(change: number) {
-    return `Deleted ${change} source strings`
+    return `Deleted ${change} source strings.`
   },
 }
 
