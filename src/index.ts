@@ -4,23 +4,56 @@ addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request))
 })
 
+const WEBHOOK_PARAMETER = 'webhook'
+
+type CrowdinEvents = 'string.added' | 'string.updated' | 'string.deleted'
+
+const mappers: Record<CrowdinEvents, (num: number) => string> = {
+  'string.added'(change: number) {
+    return `Added ${change} source strings.`
+  },
+  'string.updated'(change: number) {
+    return `Updated ${change} source strings.`
+  },
+  'string.deleted'(change: number) {
+    return `Deleted ${change} source strings`
+  },
+}
+
 async function handleRequest(request: Request) {
   const url = new URL(request.url)
   const res = await request.json()
   const eventsStructured = groupBy(res.events, event => event.event)
-  let query = request.query
-  let stringAddAmount; if (eventsStructured.hasOwnProperty('string.added')) {stringAddAmount = JSON.stringify(eventsStructured["string.added"].length)} else {stringAddAmount = 0}
-  let stringChangeAmount; if (eventsStructured.hasOwnProperty('string.updated')) {stringChangeAmount = JSON.stringify(eventsStructured["string.updated"].length)} else {stringChangeAmount = 0}
-  let stringDeleteAmount; if (eventsStructured.hasOwnProperty('string.deleted')) {stringDeleteAmount = JSON.stringify(eventsStructured["string.deleted"].length)} else {stringDeleteAmount = 0}
-  const body = JSON.stringify({
-    content: `New changes were made in project!\n${stringAddAmount} lines added.\n${stringChangeAmount} lines changed.\n${stringDeleteAmount} lines deleted.`
+
+  const buildEventTally = (key: CrowdinEvents) => ({
+    event: key,
+    count: eventsStructured[key]?.length ?? 0,
   })
 
-let discordWebhook = url.searchParams.get('webhook_link')
+  let added = buildEventTally('string.added')
+  let changed = buildEventTally('string.updated')
+  let deleted = buildEventTally('string.deleted')
+
+  const updates = [added, changed, deleted]
+    .filter(val => val.count > 0)
+    .map(val => mappers[val.event](val.count))
+
+  const body = JSON.stringify({
+    content: `New changes were made in project!\n${updates.join('\n')}`,
+  })
+
+  let discordWebhook = url.searchParams.get(WEBHOOK_PARAMETER)
+  if (!discordWebhook) {
+    return new Response(
+      JSON.stringify({
+        error: `Missing "${WEBHOOK_PARAMETER}" query parameter in request.`,
+      }),
+    )
+  }
   await fetch(discordWebhook, {
-    method: "POST",
+    method: 'POST',
     headers: { 'Content-type': 'application/json' },
-    body
+    body,
   })
 
   return new Response('OK')
