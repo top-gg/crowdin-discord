@@ -50,7 +50,7 @@ async function handleRequest(request: Request) {
     }
 
   const body = JSON.stringify({
-    content: `New changes were made in ${projectName} project!\n${updates.join('\n')}`,
+    content: `New changes were made in ${projectName}!\n${updates.join('\n')}`,
   })
 
   let discordWebhook = url.searchParams.get(WEBHOOK_PARAMETER)
