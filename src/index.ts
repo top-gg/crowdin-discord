@@ -5,6 +5,8 @@ addEventListener('fetch', event => {
 })
 
 const WEBHOOK_PARAMETER = 'webhook'
+const PROJECT_PARAMETER = 'project'
+
 
 type CrowdinEvents = 'string.added' | 'string.updated' | 'string.deleted'
 
@@ -38,8 +40,17 @@ async function handleRequest(request: Request) {
     .filter(val => val.count > 0)
     .map(val => mappers[val.event](val.count))
 
+    let projectName = url.searchParams.get(PROJECT_PARAMETER)
+    if (!projectName) {
+      return new Response(
+        JSON.stringify({
+          error: `Missing "${PROJECT_PARAMETER}" query parameter in request.`,
+        }),
+      )
+    }
+
   const body = JSON.stringify({
-    content: `New changes were made in project!\n${updates.join('\n')}`,
+    content: `New changes were made in ${projectName}!\n${updates.join('\n')}`,
   })
 
   let discordWebhook = url.searchParams.get(WEBHOOK_PARAMETER)
