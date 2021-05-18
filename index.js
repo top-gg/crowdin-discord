@@ -15,7 +15,7 @@ const body = JSON.stringify({
   content: `New lines were added!\n${project}`
 })
 
-await fetch('DISCORD WEBHOOK URL', {
+await fetch(env.ds_webhook, {
   method: "POST",
   headers: { 'Content-type': 'application/json' },
   body

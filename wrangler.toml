@@ -1,3 +1,4 @@
+ds_webhook = "your URL here"
 name = "WORKER NAME"
 type = "javascript"
 
