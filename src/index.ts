@@ -5,8 +5,6 @@ addEventListener('fetch', event => {
 })
 
 const WEBHOOK_PARAMETER = 'webhook'
-const PROJECT_PARAMETER = 'project'
-
 
 type CrowdinEvents = 'string.added' | 'string.updated' | 'string.deleted'
 
@@ -40,19 +38,12 @@ async function handleRequest(request: Request) {
     .filter(val => val.count > 0)
     .map(val => mappers[val.event](val.count))
 
-    let projectName = url.searchParams.get(PROJECT_PARAMETER)
-    if (!projectName) {
-      return new Response(
-        JSON.stringify({
-          error: `Missing "${PROJECT_PARAMETER}" query parameter in request.`,
-        }),
-      )
-    }
-
+  let projectName = res.events[0].project
+  
   const body = JSON.stringify({
     embeds: [{
       "title": `New changes were made in ${projectName}!`,
-      "description": `${updates.join('\n')}\n\n[Project Link](https://crwd.in/${res.events[0].project})`
+      "description": `${updates.join('\n')}\n\n[Project Link](https://crwd.in/${projectName})`
     }],
   })
 
