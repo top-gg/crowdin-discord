@@ -24,5 +24,5 @@ $ wrangler publish
 - Open API & Webhooks page 
 - Add new webhook
 - In the URL string put link to your Worker 
-- At the end of a string add `?webhook=DISCORD_WEBHOOK_URL`. where DISCORD_WEBHOOK_URL is your Discord Webhook
+- At the end of Worker URL add `?webhook=DISCORD_WEBHOOK_URL`. where DISCORD_WEBHOOK_URL is your Discord Webhook
 - Select events you need to be notified about. (Supported events: `Source string added`, `Source string updated`, `Source string deleted`)
