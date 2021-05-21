@@ -1,4 +1,4 @@
-name = "workername"
+name = "crowdin-discord"
 type = "webpack"
 webpack_config = "webpack.config.js"
 account_id = "your account id"
