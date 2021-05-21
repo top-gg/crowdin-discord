@@ -20,6 +20,12 @@ const mappers: Record<CrowdinEvents, (num: number) => string> = {
   },
 }
 
+const colors: {[event: string]:number} = {
+  "string.added": 3908923,
+  "string.updated": 15885602,
+  "string.deleted": 16711680
+}
+
 async function handleRequest(request: Request) {
   const url = new URL(request.url)
   const res = await request.json()
@@ -39,11 +45,12 @@ async function handleRequest(request: Request) {
     .map(val => mappers[val.event](val.count))
 
   let projectName = res.events[0].project
-  
+  let eventKeys = Object.keys(eventsStructured)
   const body = JSON.stringify({
     embeds: [{
       "title": `New changes were made in ${projectName}!`,
-      "description": `${updates.join('\n')}\n\n[Project Link](https://crwd.in/${projectName})`
+      "description": `${updates.join('\n')}\n\n[Project Link](https://crwd.in/${projectName})`,
+      "color": eventKeys.length > 1 ? colors['string.updated'] : colors[eventKeys[0]]
     }],
   })
 
@@ -51,8 +58,8 @@ async function handleRequest(request: Request) {
   if (!discordWebhook) {
     return new Response(
       JSON.stringify({
-        error: `Missing "${WEBHOOK_PARAMETER}" query parameter in request.`,
-      }),
+        error: `Missing '${WEBHOOK_PARAMETER}' query parameter in request.`
+      }), {status: 400}
     )
   }
   await fetch(discordWebhook, {
@@ -61,5 +68,5 @@ async function handleRequest(request: Request) {
     body,
   })
 
-  return new Response('OK')
+  return new Response('OK', {status: 200})
 }
