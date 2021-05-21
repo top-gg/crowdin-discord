@@ -20,7 +20,7 @@ const mappers: Record<CrowdinEvents, (num: number) => string> = {
   },
 }
 
-const colors: {[event: string]:number} = {
+const colors: Record<CrowdinEvents, number> = {
   "string.added": 3908923,
   "string.updated": 15885602,
   "string.deleted": 16711680
@@ -45,7 +45,7 @@ async function handleRequest(request: Request) {
     .map(val => mappers[val.event](val.count))
 
   let projectName = res.events[0].project
-  let eventKeys = Object.keys(eventsStructured)
+  let eventKeys = Object.keys(eventsStructured) as CrowdinEvents[]
   const body = JSON.stringify({
     embeds: [{
       "title": `New changes were made in ${projectName}!`,
