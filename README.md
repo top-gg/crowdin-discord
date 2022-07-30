@@ -12,7 +12,7 @@ $ git clone https://github.com/top-gg/crowdin-discord
 $ cd crowdin-discord
 
 # open wrangler.toml and replace `name = "WORKER NAME"` with your Cloudflare Worker name and `account_id = "YOUR account_id"` with your accound id (can be found in workers section)
-# open index.js , go to line №18 and replace 'DISCORD WEBHOOK URL' with Discord Webhook URL
+# open index.ts , go to line №7 and replace 'webook' with Discord Webhook URL
 
 $ wrangler config
 $ wrangler publish
