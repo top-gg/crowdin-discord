@@ -4,7 +4,7 @@ addEventListener('fetch', event => {
   event.respondWith(handleRequest(event.request))
 })
 
-const WEBHOOK_PARAMETER = 'webhook'
+const WEBHOOK_PARAMETER = 'WEBHOOK LINK HERE'
 
 type CrowdinEvents = 'string.added' | 'string.updated' | 'string.deleted'
 
